@@ -135,26 +135,26 @@ EOF
 #############################################################################
 
 print_header() {
-    echo -e "${CYAN}${BOLD}"
-    echo "╔════════════════════════════════════════════════════════════════════╗"
-    echo "║       SSL Certificate Checker v${SCRIPT_VERSION} - by ENGINYRING         ║"
-    echo "╚════════════════════════════════════════════════════════════════════╝"
-    echo -e "${NC}"
+    echo -e "${CYAN}${BOLD}" >&2
+    echo "╔════════════════════════════════════════════════════════════════════╗" >&2
+    echo "║       SSL Certificate Checker v${SCRIPT_VERSION} - by ENGINYRING         ║" >&2
+    echo "╚════════════════════════════════════════════════════════════════════╝" >&2
+    echo -e "${NC}" >&2
 }
 
 print_footer() {
-    echo ""
-    echo -e "${CYAN}─────────────────────────────────────────────────────────────────${NC}"
-    echo -e "${BOLD}Need professional hosting with automatic SSL certificates?${NC}"
-    echo -e "  Web Hosting: ${BLUE}${AUTHOR_URL}/en/webhosting${NC}"
-    echo -e "  VPS Servers: ${BLUE}${AUTHOR_URL}/en/virtual-servers${NC}"
-    echo -e "  Free Tools:  ${BLUE}${AUTHOR_URL}/tools${NC}"
-    echo -e "${CYAN}─────────────────────────────────────────────────────────────────${NC}"
-    echo ""
+    echo "" >&2
+    echo -e "${CYAN}─────────────────────────────────────────────────────────────────${NC}" >&2
+    echo -e "${BOLD}Need professional hosting with automatic SSL certificates?${NC}" >&2
+    echo -e "  Web Hosting: ${BLUE}${AUTHOR_URL}/en/webhosting${NC}" >&2
+    echo -e "  VPS Servers: ${BLUE}${AUTHOR_URL}/en/virtual-servers${NC}" >&2
+    echo -e "  Free Tools:  ${BLUE}${AUTHOR_URL}/tools${NC}" >&2
+    echo -e "${CYAN}─────────────────────────────────────────────────────────────────${NC}" >&2
+    echo "" >&2
 }
 
 print_success() {
-    echo -e "${GREEN}✓${NC} $1"
+    echo -e "${GREEN}✓${NC} $1" >&2
 }
 
 print_error() {
@@ -162,16 +162,16 @@ print_error() {
 }
 
 print_warning() {
-    echo -e "${YELLOW}⚠${NC} $1"
+    echo -e "${YELLOW}⚠${NC} $1" >&2
 }
 
 print_info() {
-    echo -e "${BLUE}ℹ${NC} $1"
+    echo -e "${BLUE}ℹ${NC} $1" >&2
 }
 
 print_section() {
-    echo ""
-    echo -e "${CYAN}${BOLD}═══ $1 ═══${NC}"
+    echo "" >&2
+    echo -e "${CYAN}${BOLD}═══ $1 ═══${NC}" >&2
 }
 
 #############################################################################
@@ -280,11 +280,11 @@ install_dependencies() {
     fi
     
     print_section "Missing Dependencies Detected"
-    echo -e "${YELLOW}The following packages need to be installed:${NC}"
+    echo -e "${YELLOW}The following packages need to be installed:${NC}" >&2
     for pkg in "$@"; do
-        echo "  • ${pkg}"
+        echo "  • ${pkg}" >&2
     done
-    echo ""
+    echo "" >&2
     
     read -rp "Install missing dependencies? [Y/n] " response
     response="${response:-Y}"
@@ -449,10 +449,10 @@ get_ssl_certificate() {
         openssl x509 -outform PEM > "${cert_file}" 2>/dev/null; then
         print_error "Failed to retrieve SSL certificate"
         print_info "Possible reasons:"
-        echo "  • Server may be unreachable"
-        echo "  • Firewall blocking port 443"
-        echo "  • No SSL/TLS service on port 443"
-        echo "  • SSL handshake failed"
+        echo "  • Server may be unreachable" >&2
+        echo "  • Firewall blocking port 443" >&2
+        echo "  • No SSL/TLS service on port 443" >&2
+        echo "  • SSL handshake failed" >&2
         return 1
     fi
     
@@ -654,58 +654,58 @@ display_certificate_info() {
         status_color="${RED}"
     fi
     
-    echo -e "${status_color}${BOLD}${status_icon} ${status_message} - ${domain}${NC}"
-    echo ""
+    echo -e "${status_color}${BOLD}${status_icon} ${status_message} - ${domain}${NC}" >&2
+    echo "" >&2
     
     # Validity Period
-    echo -e "${CYAN}${BOLD}📅 Validity Period${NC}"
-    echo -e "  Issue Date:      $(date -d "@${CERT_INFO[valid_from_epoch]}" "+%b %d, %Y" 2>/dev/null || date -r "${CERT_INFO[valid_from_epoch]}" "+%b %d, %Y" 2>/dev/null)"
-    echo -e "  Expiration:      $(date -d "@${CERT_INFO[valid_to_epoch]}" "+%b %d, %Y" 2>/dev/null || date -r "${CERT_INFO[valid_to_epoch]}" "+%b %d, %Y" 2>/dev/null)"
+    echo -e "${CYAN}${BOLD}📅 Validity Period${NC}" >&2
+    echo -e "  Issue Date:      $(date -d "@${CERT_INFO[valid_from_epoch]}" "+%b %d, %Y" 2>/dev/null || date -r "${CERT_INFO[valid_from_epoch]}" "+%b %d, %Y" 2>/dev/null)" >&2
+    echo -e "  Expiration:      $(date -d "@${CERT_INFO[valid_to_epoch]}" "+%b %d, %Y" 2>/dev/null || date -r "${CERT_INFO[valid_to_epoch]}" "+%b %d, %Y" 2>/dev/null)" >&2
     
     local days_color="${GREEN}"
     [[ ${CERT_INFO[days_remaining]} -le 30 ]] && days_color="${RED}"
-    echo -e "  Days Remaining:  ${days_color}${CERT_INFO[days_remaining]}${NC}"
-    echo -e "  Certificate Age: ${CERT_INFO[age_years]} years"
-    echo ""
+    echo -e "  Days Remaining:  ${days_color}${CERT_INFO[days_remaining]}${NC}" >&2
+    echo -e "  Certificate Age: ${CERT_INFO[age_years]} years" >&2
+    echo "" >&2
     
     # Certificate Details
-    echo -e "${CYAN}${BOLD}📄 Certificate Details${NC}"
-    echo -e "  Common Name:     ${CERT_INFO[common_name]}"
-    echo -e "  Issuer:          ${CERT_INFO[issuer_cn]}"
-    [[ "${CERT_INFO[issuer_o]}" != "" ]] && echo -e "  Issuer Org:      ${CERT_INFO[issuer_o]}"
-    echo -e "  Organization:    ${CERT_INFO[organization]}"
-    echo -e "  Type:            ${CERT_INFO[cert_type]}"
-    echo ""
+    echo -e "${CYAN}${BOLD}📄 Certificate Details${NC}" >&2
+    echo -e "  Common Name:     ${CERT_INFO[common_name]}" >&2
+    echo -e "  Issuer:          ${CERT_INFO[issuer_cn]}" >&2
+    [[ "${CERT_INFO[issuer_o]}" != "" ]] && echo -e "  Issuer Org:      ${CERT_INFO[issuer_o]}" >&2
+    echo -e "  Organization:    ${CERT_INFO[organization]}" >&2
+    echo -e "  Type:            ${CERT_INFO[cert_type]}" >&2
+    echo "" >&2
     
     # Subject Alternative Names
     if [[ ${CERT_INFO[san_count]} -gt 0 ]]; then
-        echo -e "${CYAN}${BOLD}🌐 Subject Alternative Names (${CERT_INFO[san_count]})${NC}"
+        echo -e "${CYAN}${BOLD}🌐 Subject Alternative Names (${CERT_INFO[san_count]})${NC}" >&2
         IFS=',' read -ra san_array <<< "${CERT_INFO[sans]}"
         local count=0
         for san in "${san_array[@]}"; do
             if [[ ${count} -lt 15 ]]; then
-                echo -e "  • ${san}"
+                echo -e "  • ${san}" >&2
                 ((count++))
             fi
         done
         if [[ ${CERT_INFO[san_count]} -gt 15 ]]; then
-            echo -e "  ${YELLOW}... and $((CERT_INFO[san_count] - 15)) more${NC}"
+            echo -e "  ${YELLOW}... and $((CERT_INFO[san_count] - 15)) more${NC}" >&2
         fi
-        echo ""
+        echo "" >&2
     fi
     
     # Security Analysis
-    echo -e "${CYAN}${BOLD}🔒 Security Analysis${NC}"
+    echo -e "${CYAN}${BOLD}🔒 Security Analysis${NC}" >&2
     
     # Key strength
     local key_color="${GREEN}"
     [[ "${CERT_INFO[weak_key]}" == "true" ]] && key_color="${RED}"
-    echo -e "  Key Strength:    ${key_color}${CERT_INFO[key_size]}${NC}"
+    echo -e "  Key Strength:    ${key_color}${CERT_INFO[key_size]}${NC}" >&2
     
     # Signature algorithm
     local sig_color="${GREEN}"
     [[ "${CERT_INFO[weak_signature]}" == "true" ]] && sig_color="${RED}"
-    echo -e "  Signature:       ${sig_color}${CERT_INFO[signature_algorithm]}${NC}"
+    echo -e "  Signature:       ${sig_color}${CERT_INFO[signature_algorithm]}${NC}" >&2
     
     # Self-signed
     local selfsign_color="${GREEN}"
@@ -714,12 +714,12 @@ display_certificate_info() {
         selfsign_color="${YELLOW}"
         selfsign_text="Self-Signed"
     fi
-    echo -e "  Authority:       ${selfsign_color}${selfsign_text}${NC}"
+    echo -e "  Authority:       ${selfsign_color}${selfsign_text}${NC}" >&2
     
     # Wildcard
     local wildcard_text="Standard Certificate"
     [[ "${CERT_INFO[is_wildcard]}" == "true" ]] && wildcard_text="Wildcard Certificate"
-    echo -e "  Type:            ${wildcard_text}"
+    echo -e "  Type:            ${wildcard_text}" >&2
     
     # Hostname match
     local hostname_color="${GREEN}"
@@ -728,7 +728,7 @@ display_certificate_info() {
         hostname_color="${RED}"
         hostname_text="Hostname Mismatch"
     fi
-    echo -e "  Hostname Check:  ${hostname_color}${hostname_text}${NC}"
+    echo -e "  Hostname Check:  ${hostname_color}${hostname_text}${NC}" >&2
     
     # Certificate Transparency
     local ct_color="${GREEN}"
@@ -737,13 +737,13 @@ display_certificate_info() {
         ct_color="${YELLOW}"
         ct_text="No CT Logging"
     fi
-    echo -e "  Transparency:    ${ct_color}${ct_text}${NC}"
-    echo ""
+    echo -e "  Transparency:    ${ct_color}${ct_text}${NC}" >&2
+    echo "" >&2
     
     # Additional Info
-    echo -e "${CYAN}${BOLD}ℹ️  Additional Information${NC}"
-    echo -e "  Serial Number:   ${CERT_INFO[serial]:0:60}..."
-    echo ""
+    echo -e "${CYAN}${BOLD}ℹ️  Additional Information${NC}" >&2
+    echo -e "  Serial Number:   ${CERT_INFO[serial]:0:60}..." >&2
+    echo "" >&2
     
     # Warnings and recommendations
     if [[ ${CERT_INFO[days_remaining]} -le 60 ]] && [[ "${CERT_INFO[is_valid]}" == "true" ]]; then
@@ -863,6 +863,7 @@ main() {
     local auto_export=""
     local output_file=""
     local use_cache=true
+    local DOMAIN_ARG=""
     
     # Parse command-line arguments
     while [[ $# -gt 0 ]]; do
@@ -888,7 +889,7 @@ main() {
                 shift
                 ;;
             -q|--quiet)
-                exec 1>/dev/null
+                exec 2>/dev/null
                 shift
                 ;;
             --no-color)
@@ -897,7 +898,7 @@ main() {
                 ;;
             -*)
                 print_error "Unknown option: $1"
-                echo "Use --help for usage information"
+                echo "Use --help for usage information" >&2
                 exit 1
                 ;;
             *)
@@ -922,7 +923,7 @@ main() {
         print_success "All dependencies are installed"
     fi
     
-    echo ""
+    echo "" >&2
     
     # Get domain input
     local domain
@@ -938,7 +939,7 @@ main() {
     fi
     
     print_info "Checking SSL certificate for: ${domain}"
-    echo ""
+    echo "" >&2
     
     # Rate limiting check
     local client_key="ssl_checker_$(whoami)_${domain}"
@@ -970,7 +971,8 @@ main() {
             if [[ -n "${auto_export}" ]]; then
                 export_certificate_data "${domain}" "${auto_export}" "${output_file}"
             else
-                read -rp "\nExport certificate data? [y/N] " export_response
+                echo "" >&2
+                read -rp "Export certificate data? [y/N] " export_response
                 if [[ "${export_response}" =~ ^[Yy]$ ]]; then
                     read -rp "Export format (json/csv/txt): " export_format
                     export_certificate_data "${domain}" "${export_format}"
@@ -1004,7 +1006,7 @@ main() {
     display_certificate_info "${domain}"
     
     # Auto-export or ask
-    echo ""
+    echo "" >&2
     if [[ -n "${auto_export}" ]]; then
         export_certificate_data "${domain}" "${auto_export}" "${output_file}"
     else
