@@ -286,7 +286,8 @@ install_dependencies() {
     done
     echo "" >&2
     
-    read -rp "Install missing dependencies? [Y/n] " response
+    echo -n "Install missing dependencies? [Y/n] "
+    read -r response
     response="${response:-Y}"
     
     if [[ ! "${response}" =~ ^[Yy]$ ]]; then
@@ -930,7 +931,8 @@ main() {
     if [[ -n "${DOMAIN_ARG:-}" ]]; then
         domain="${DOMAIN_ARG}"
     else
-        read -rp "Enter domain name (e.g., example.com): " domain
+        echo -n "Enter domain name (e.g., example.com): "
+        read -r domain
     fi
     
     # Validate domain
@@ -972,9 +974,13 @@ main() {
                 export_certificate_data "${domain}" "${auto_export}" "${output_file}"
             else
                 echo "" >&2
-                read -rp "Export certificate data? [y/N] " export_response
+                echo -e "${BOLD}Export Options:${NC}" >&2
+                echo -n "Export certificate data? [y/N]: "
+                read -r export_response
                 if [[ "${export_response}" =~ ^[Yy]$ ]]; then
-                    read -rp "Export format (json/csv/txt): " export_format
+                    echo -n "Export format (json/csv/txt) [json]: "
+                    read -r export_format
+                    export_format="${export_format:-json}"
                     export_certificate_data "${domain}" "${export_format}"
                 fi
             fi
@@ -1006,13 +1012,16 @@ main() {
     display_certificate_info "${domain}"
     
     # Auto-export or ask
-    echo "" >&2
     if [[ -n "${auto_export}" ]]; then
         export_certificate_data "${domain}" "${auto_export}" "${output_file}"
     else
-        read -rp "Export certificate data? [y/N] " export_response
+        echo "" >&2
+        echo -e "${BOLD}Export Options:${NC}" >&2
+        echo -n "Export certificate data? [y/N]: "
+        read -r export_response
         if [[ "${export_response}" =~ ^[Yy]$ ]]; then
-            read -rp "Export format (json/csv/txt) [json]: " export_format
+            echo -n "Export format (json/csv/txt) [json]: "
+            read -r export_format
             export_format="${export_format:-json}"
             export_certificate_data "${domain}" "${export_format}"
         fi
