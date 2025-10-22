@@ -787,7 +787,8 @@ export_certificate_data() {
             ;;
     esac
     
-    print_success "Certificate data exported to: ${output_file}"
+    echo "" >&2
+    echo "Output: ${output_file}" >&2
 }
 
 export_json() {
@@ -974,19 +975,13 @@ main() {
                 export_certificate_data "${domain}" "${auto_export}" "${output_file}"
             else
                 echo "" >&2
-                echo -e "${CYAN}╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌${NC}" >&2
-                echo -e "${BOLD}📤 Export Options${NC}" >&2
-                echo "" >&2
-                echo -n "Export certificate data? [y/N]: " >&2
+                echo -n "Export certificate data? [y/N] " >&2
                 read -r export_response
                 if [[ "${export_response}" =~ ^[Yy]$ ]]; then
                     echo -n "Export format (json/csv/txt) [json]: " >&2
                     read -r export_format
                     export_format="${export_format:-json}"
                     export_certificate_data "${domain}" "${export_format}"
-                else
-                    echo "" >&2
-                    print_info "Export skipped"
                 fi
             fi
             
@@ -1021,19 +1016,13 @@ main() {
         export_certificate_data "${domain}" "${auto_export}" "${output_file}"
     else
         echo "" >&2
-        echo -e "${CYAN}╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌${NC}" >&2
-        echo -e "${BOLD}📤 Export Options${NC}" >&2
-        echo "" >&2
-        echo -n "Export certificate data? [y/N]: " >&2
+        echo -n "Export certificate data? [y/N] " >&2
         read -r export_response
         if [[ "${export_response}" =~ ^[Yy]$ ]]; then
             echo -n "Export format (json/csv/txt) [json]: " >&2
             read -r export_format
             export_format="${export_format:-json}"
             export_certificate_data "${domain}" "${export_format}"
-        else
-            echo "" >&2
-            print_info "Export skipped"
         fi
     fi
     
